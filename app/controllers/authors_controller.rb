@@ -4,7 +4,10 @@ class AuthorsController < ApplicationController
   # GET /authors
   # GET /authors.json
   def index
-    @authors = Author.all
+    order = params.fetch('order', 'name')
+    home_town = params['home_town']
+    @authors = Author.where('home_town LIKE ?', "%#{home_town}%")
+    @authors = @authors.where("name ILIKE ?", "%#{params[:q]}%").order(order)
   end
 
   # GET /authors/1

@@ -1,11 +1,36 @@
 <p id="notice"><%= notice %></p>
-
+<% params = request.query_parameters %>
 <h1>Authors</h1>
+
+<%= form_tag(authors_path, id: 'search', method: 'get', enforce_utf8: false) do %>
+  <%= label_tag(:q, "Search authors:") %>
+  <%= text_field_tag(:q) %>
+  <%= hidden_field_tag :order, value = params[:order]%>
+  <%= hidden_field_tag :home_town, value = params[:home_town]%>
+  <%= submit_tag("Search", name: nil) %>
+<% end %>
+
+<% home_towns = Author.all.pluck(:home_town).uniq %>
+<%= form_tag authors_path, method: 'get', enforce_utf8: false do %>
+  <%= select_tag 'home_town', options_for_select(home_towns.each),
+        onchange: 'this.form.submit()', prompt: 'Filter by home town' %>
+
+  <%= hidden_field_tag :order, value = params[:order]%>
+  <%= hidden_field_tag :q, value = params[:q]%>
+<% end %>
+
+<%= form_tag authors_path, method: 'get', enforce_utf8: false do %>
+  <%= button_tag 'Reset filters', name: nil %>
+<% end %>
 
 <table>
   <thead>
     <tr>
-      <th>Name</th>
+      <% if results_are_descending? %>
+        <th><%= link_to 'Name', authors_path(params.merge(order: 'name')) %></th>
+      <% else %>
+        <th><%= link_to 'Name', authors_path(params.merge(order: 'name DESC')) %></th>
+      <% end %>
       <th>Home town</th>
       <th colspan="3"></th>
     </tr>
@@ -26,4 +51,5 @@
 
 <br>
 
-<%= link_to 'New Author', new_author_path %>
+<%= link_to 'New Author', new_author_path %> <br />
+<%= link_to 'Switch to books view', books_path %>
