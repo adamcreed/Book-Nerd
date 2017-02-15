@@ -18,17 +18,17 @@
 
   <div class="field">
     <%= f.label :genre %>
-    <%= f.text_field :genre %>
+    <%= f.select :genre, options_for_select(@genres, selected: f.object.genre) %>
   </div>
 
   <div class="field">
     <%= f.label :author %>
-
-    <% if f.object.author.nil? %>
+    <%= f.select :author_id, options_for_select(@authors, selected: get_existing(f.object.author)) %>
+    <!-- <% if f.object.author.nil? %>
       <%= f.text_field :author %>
     <% else %>
       <%= f.text_field :author, value: f.object.author.name %>
-    <% end %>
+    <% end %> -->
   </div>
 
   <div class="actions">

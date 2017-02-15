@@ -10,9 +10,8 @@
   <%= submit_tag("Search", name: nil) %>
 <% end %>
 
-<% genres = Book.all.pluck(:genre).uniq %>
 <%= form_tag books_path, method: 'get', enforce_utf8: false do %>
-  <%= select_tag 'genre', options_for_select(genres.each), onchange: 'this.form.submit()', prompt: 'Filter by genre' %>
+  <%= select_tag 'genre', options_for_select(@genres.each), onchange: 'this.form.submit()', prompt: 'Filter by genre' %>
   <%= hidden_field_tag :order, value = params[:order]%>
   <%= hidden_field_tag :q, value = params[:q]%>
 <% end %>

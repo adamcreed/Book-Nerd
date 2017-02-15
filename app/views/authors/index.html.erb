@@ -10,9 +10,8 @@
   <%= submit_tag("Search", name: nil) %>
 <% end %>
 
-<% home_towns = Author.all.pluck(:home_town).uniq %>
 <%= form_tag authors_path, method: 'get', enforce_utf8: false do %>
-  <%= select_tag 'home_town', options_for_select(home_towns.each),
+  <%= select_tag 'home_town', options_for_select(@home_towns.each),
         onchange: 'this.form.submit()', prompt: 'Filter by home town' %>
 
   <%= hidden_field_tag :order, value = params[:order]%>

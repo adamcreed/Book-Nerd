@@ -8,6 +8,7 @@ class AuthorsController < ApplicationController
     home_town = params['home_town']
     @authors = Author.where('home_town LIKE ?', "%#{home_town}%")
     @authors = @authors.where("name ILIKE ?", "%#{params[:q]}%").order(order)
+    @home_towns = Author.all.pluck(:home_town).uniq
   end
 
   # GET /authors/1

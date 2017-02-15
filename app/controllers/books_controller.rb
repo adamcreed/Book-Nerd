@@ -10,6 +10,7 @@ class BooksController < ApplicationController
     genre = params['genre']
     @books = Book.where('genre LIKE ?', "%#{genre}%")
     @books = @books.where("title ILIKE ?", "%#{params[:q]}%").order(order)
+    set_genres
   end
 
   # GET /books/1
@@ -20,10 +21,15 @@ class BooksController < ApplicationController
   # GET /books/new
   def new
     @book = Book.new
+
+    set_authors
+    set_genres
   end
 
   # GET /books/1/edit
   def edit
+    set_authors
+    set_genres
   end
 
   # POST /books
@@ -72,11 +78,16 @@ class BooksController < ApplicationController
       @book = Book.find(params[:id])
     end
 
+    def set_authors
+      @authors = Author.all.map { |author| [author.name, author.id] }
+    end
+
+    def set_genres
+      @genres = Book.pluck(:genre).uniq
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def book_params
-      author = Author.find_by(name: params[:book][:author])
-      params[:book][:author_id] = author.id unless author.nil?
-      params[:book].delete(:author)
-      params.require(:book).permit(:title, :genre, :author, :author_id)
+      params.require(:book).permit(:title, :genre, :author_id)
     end
 end
